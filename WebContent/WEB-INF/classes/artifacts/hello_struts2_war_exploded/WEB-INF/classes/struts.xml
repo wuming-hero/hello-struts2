@@ -41,6 +41,18 @@
         </action>
     </package>
 
+    <!-- 当使用Json插件时,此时应该继承json-default,json-default继承自struts-default!!这样,结果类型中才有type="json" -->
+    <package name="book" namespace="/" extends="json-default">
+        <action name="catesList" class="com.wuming.action.CatesListAction">
+
+        </action>
+
+        <action name="getBooks" class="com.wuming.action.GetBooksAction">
+            <!-- json类型的result会把整个action实例转换成JSON字符串后作为服务器的响应,这也是使用json插件的作用 -->
+            <result type="json"></result>
+        </action>
+    </package>
+
     <!--所有配置都要放在package元素中,而且必须继承struts-default 或者继承其他继承于struts-default 的package-->
     <package name="default" namespace="/" extends="struts-default">
 		<!--这是一个通用的Action,此处的*表示它可以处理任意请求-->

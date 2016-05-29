@@ -8,7 +8,9 @@ import com.wuming.service.UserService;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -17,7 +19,7 @@ import java.util.Map;
  * 2,为请求参数提供field,并提供setter和getter方法
  * 3,有无参构造器
  *
- * @author wryd
+ * @author wuming
  */
 
 public class LoginAction extends ActionSupport {
@@ -42,7 +44,6 @@ public class LoginAction extends ActionSupport {
         if (id > 0) {
             //得到HttpSession方法一--伪访问法:借住于ActionContext
             ActionContext actCon = ActionContext.getContext();
-            //使用一个Map来模拟HTTPSession
             Map<String, Object> session = actCon.getSession();
             //表面向Map存放key-value,实际存放到HttpSession中
             session.put("userId", id);
@@ -50,13 +51,12 @@ public class LoginAction extends ActionSupport {
             //方法二:真访问,借住于ServletActionContext
             //由于Cookie必须使用HttpServletResponse,
             HttpServletResponse response = ServletActionContext.getResponse();
+            HttpServletRequest request = ServletActionContext.getRequest();
             //如果名字是中文的话,能打印出"小明",但会报500错误
             Cookie cookie = new Cookie("userName", user.getName());
-            System.out.println(user.getName());
             cookie.setMaxAge(100000);
             //添加Cookie
             response.addCookie(cookie);
-
             return SUCCESS;        //SUCCESS是常量名,它真实的值是"success"
         }
         return ERROR;
