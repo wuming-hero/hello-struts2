@@ -12,7 +12,6 @@
 		<script type="text/javascript">
 			function getBooks(ele) {
 				//jquery提供的像服务器发送异步请求的post方法.
-                console.log(JSON.stringify($(ele).serializeArray()));
 				$.post("getBooks", $(ele).serializeArray(), function(data) {
 					$("#show").empty();
 					for (var i = 0; i < data.books.length; i++) {
