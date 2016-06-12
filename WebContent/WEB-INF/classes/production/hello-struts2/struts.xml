@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<constant name="struts.i18n.encoding" value="UTF-8"></constant>
+	<constant name="struts.devMode" value="true"></constant>
+
+    <!-- 用来加载其它.xml文件,不需要则不用配置 -->
+    <!--<include file="abc.xml"></include>-->
+
+    <!--所有配置都要放在package元素中,而且必须继承struts-default,此文件在lib下,struts-core-2.3.4.1.jar里-->
+
+    <!--若namespace="/xyz",则在访问里的action时会在前面加上/xyz,如/xyz/loginPro,用在模块开发中-->
+    <package name="user" namespace="/" extends="struts-default">
+        <!--action有3个参数,name与表单提交的name值相同,即此action处理表单请求;class的值指定由哪个类处理;而method则具体指出由哪个方法处理,默认调用execute()方法-->
+        <action name="login_*" class="com.wuming.action.LoginAction" method="{1}">
+            <!--name属性默认值为"success",下面跳转welcome.jsp中的name属性可以不写-->
+            <!--type属性默认值是dispatcher,通常情况下不用写,这些默认属性都是继承struts-default的原因-->
+            <result name="success" type="dispatcher">/WEB-INF/content/welcome.jsp</result>
+            <result name="register">/WEB-INF/content/register.jsp</result>
+            <!--如果注册成功后让它直接列出所有用户,此时则需要跳转到别一个action去处理列出用户请求,此时将type属性设为"redirectAction"即可!-->
+            <result name="userList" type="redirectAction">viewUsers</result>
+            <result name="error">/WEB-INF/content/error.jsp</result>
+            <!--i18n 页面-->
+            <result name="I18n_success">/i18n/welcome.jsp</result>
+        </action>
+
+        <!--<action name="registPro" class="com.wuming.action.LoginProAction" method="regist">-->
+            <!--&lt;!&ndash;如果注册成功后让它直接列出所有用户,此时则需要跳转到别一个action去处理列出用户请求,此时将type属性设为"redirectAction"即可!&ndash;&gt;-->
+            <!--<result name="success" type="redirectAction">viewUsers</result>-->
+            <!--&lt;!&ndash;<result name="success">WEB-INF/content/welcome.jsp</result>&ndash;&gt;-->
+            <!--<result name="error">/WEB-INF/content/error.jsp</result>-->
+        <!--</action>-->
+
+        <action name="viewUsers" class="com.wuming.action.ViewUsersAction" method="">
+            <result name="success">/WEB-INF/content/usersList.jsp</result>
+            <result name="error">/WEB-INF/content/error.jsp</result>
+        </action>
+    </package>
+
+    <!-- 当使用Json插件时,此时应该继承json-default,json-default继承自struts-default!!这样,结果类型中才有type="json" -->
+    <package name="book" namespace="/" extends="json-default">
+        <action name="catesList" class="com.wuming.action.CatesListAction">
+
+        </action>
+
+        <action name="getBooks" class="com.wuming.action.GetBooksAction">
+            <!-- json类型的result会把整个action实例转换成JSON字符串后作为服务器的响应,这也是使用json插件的作用 -->
+            <result type="json"></result>
+        </action>
+    </package>
+
+    <!--所有配置都要放在package元素中,而且必须继承struts-default 或者继承其他继承于struts-default 的package-->
+    <package name="default" namespace="/" extends="struts-default">
+		<!--这是一个通用的Action,此处的*表示它可以处理任意请求-->
+        <action name="*">
+			<!-- 此处的{1}代表上面第一个*所匹配的字符串-->
+            <result>/WEB-INF/content/{1}.jsp</result>
+        </action>
+    </package>
+
+
+    <!-- Add packages here -->
+
+</struts>
